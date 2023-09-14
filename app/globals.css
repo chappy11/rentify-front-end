@@ -48,6 +48,11 @@
   transition: all 0.3s ease;
 }
 
+.leaflet-container {
+  width: 100wh; 
+  height: 100vh;
+}
+
 .content-name {
   position: absolute;
   bottom: 0px;
