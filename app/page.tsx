@@ -11,10 +11,11 @@ export default function Home() {
   const displayImage = useMemo(()=>{
     return vehicleCategory.map((val,i)=>(
       // eslint-disable-next-line react/jsx-key
-      <CarCard imagePath={val.image} name={val.name}/>
+      <CarCard imagePath={val.image} name={val.name} key={i.toString()}/>
     ))
   },[])
   
+ 
   return (
     <main className="">
       <section className=' h-screen flex w-full '>

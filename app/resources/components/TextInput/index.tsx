@@ -32,7 +32,7 @@ export default function TextInput(props:InputProps) {
     return (
         <>
         <div className="form my-2">
-            <input autoComplete="off" required {...props} type={newTypes}/>
+            <input required autoComplete='off' {...props} type={newTypes}/>
             <label htmlFor="text" className="label-name">
             <span className="content-name">
                 {label}
