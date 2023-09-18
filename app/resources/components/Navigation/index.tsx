@@ -31,11 +31,11 @@ export default  function Navigation() {
 
         if(user.user_type === 'OWNER'){
             return(<>
-                <Link href={Routes.REGISTER_OWNER}>
+                <Link href={Routes.VEHICLE}>
                     <li className=" text-white px-4">
                        My Vehicle
                     </li>
-                    </Link>
+                </Link>
                     <Link href={Routes.LOGIN}  className=" text-white px-4 hover:text-slate-300" >
                         {user?.username}
                     </Link>

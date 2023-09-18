@@ -3,5 +3,7 @@ export enum Routes {
     LOGIN = '/login',
     SIGN_UP = '/signup',
     REGISTER = '/register',
-    REGISTER_OWNER = '/registerowner'
+    REGISTER_OWNER = '/registerowner',
+    VEHICLE = '/vehicle',
+    ADD_VEHICLE = '/addvehicle',
 }
