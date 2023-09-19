@@ -22,7 +22,7 @@ export default function CarCard(props:Props) {
         <div className=" px-3 py-5">
             <p className=" text-2xl font-bold">{name}</p>
             <div className="h-3"/>
-            <Button text="Show More"/>
+            <Button text="Show More" onClick={()=>{}}/>
         </div>
         
     </div>

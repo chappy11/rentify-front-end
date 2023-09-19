@@ -15,3 +15,9 @@ export const getVehicleById = async(userId:string)=>{
 
     return resp;
 }
+
+export const getVehicles = async()=>{
+    const resp = await axiosInstance.get(`vehicle/vehicles`);
+
+    return resp;
+}
