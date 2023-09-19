@@ -21,3 +21,9 @@ export const getVehicles = async()=>{
 
     return resp;
 }
+
+export const getVehicleDetails = async(id:string)=>{
+    const resp = await axiosInstance.get(`vehicle/details/${id}`);
+
+    return resp;
+}

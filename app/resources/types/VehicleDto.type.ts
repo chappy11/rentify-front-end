@@ -1,3 +1,5 @@
+import { UserDto } from "./UserDto.type";
+
 export type VehicleDto = {
     vehicle_id:string;
     brand:string;
@@ -10,3 +12,6 @@ export type VehicleDto = {
     vehicleImage:string;
     user_id:string;
 }
+
+
+export type VehicleDetailsDto = VehicleDto & UserDto;

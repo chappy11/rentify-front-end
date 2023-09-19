@@ -6,5 +6,6 @@ export enum Routes {
     REGISTER_OWNER = '/registerowner',
     VEHICLE = '/vehicle',
     ADD_VEHICLE = '/addvehicle',
-    VEHICLES = '/vehicles'
+    VEHICLES = '/vehicles',
+    VIEW_VEHICLE = '/viewvehicle',
 }
