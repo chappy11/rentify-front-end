@@ -23,7 +23,7 @@ export default function Home() {
         <div className=' flex flex-1 flex-col justify-center ml-16'>
           <h1 className=' text-bold text-5xl font-extrabold'>Rentify</h1>
           <h3 className=' text-3xl mt-3'>Transport your materials or furniture <span className=' text-blue-800'>effortlessly.</span></h3>
-          <button className=' bg-black text-white px-9 py-7 rounded-md' onClick={()=>window.location.href=Routes.VEHICLES}>
+          <button className=' bg-black text-white px-5 w-1/4 py-2 text-xl rounded-full mt-10' onClick={()=>window.location.href=Routes.VEHICLES}>
             Rent now!
           </button>
         </div>
