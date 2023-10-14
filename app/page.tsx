@@ -2,6 +2,7 @@
 
 import Lottie from 'lottie-react';
 import Car from './resources/assets/application.json';
+
 import { vehicleCategory } from './resources/constant/Category';
 import { useMemo } from 'react';
 import { CarCard } from './resources/components';

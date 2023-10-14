@@ -6,7 +6,7 @@ import { Routes } from "../resources/types/Routes.enum";
 import { useState } from "react";
 import useAlertOption from "../resources/hooks/useAlertOption";
 import { dataIsRequired } from "../resources/constant/String";
-import {  userLogin } from "../resources/services/UserService";
+import { userLogin } from "../resources/services/UserService";
 import Swal from "sweetalert2";
 
 export default function Login() {
@@ -34,11 +34,13 @@ export default function Login() {
       const {status,message,data} = resp.data;
       if(status !== 1){
         alertError(message);
+        return;
       }
 
       const userData = JSON.stringify(data);
       localStorage.setItem('account',userData);
       Swal.fire({
+        icon:'success',
         title:'Success',
         text:'Successfully Login'
       }).then(e=>{

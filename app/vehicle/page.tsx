@@ -28,6 +28,7 @@ export default function Vehicle() {
                     <p className=" py-1"><span>Brand: </span>{val.brand}</p>
                     <p className=" py-1"><span>Model: </span>{val.model}</p>
                     <p className=" py-1"><span>Vehicle Type: </span>{val.vehicle_type}</p>
+                    <p className=" py-1"><span>Price: </span>{val.price}</p>
                 </div>
             </div>
         ))

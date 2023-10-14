@@ -33,6 +33,7 @@ export default function AddVehicle() {
     const [brand,setBrand] = useState<string>('');
     const [model,setModel] = useState<string>('');
     const [description,setDescription] = useState<string>('');
+    const [price,setPrice] = useState<string>('');
     const {alertWarning,alertError} = useAlertOption();
 
 
@@ -110,6 +111,16 @@ export default function AddVehicle() {
                 return;   
             }
 
+            if(!price){
+                alertWarning(dataIsRequired("Price"));
+                return;
+            }
+
+            if(parseFloat(price) < 1){
+                alertWarning(" Price should not less than one ")
+                return;
+            }   
+
             let formdata = new FormData();
             formdata.append('userId',user.user_id);
             formdata.append('or',orImg);
@@ -119,6 +130,7 @@ export default function AddVehicle() {
             formdata.append('model',model);
             formdata.append('description',description);
             formdata.append('vehicleType',vehicleType);
+            formdata.append("price",price);
             const resp = await addNewVehicle(formdata);
             const {status} = resp.data;
 
@@ -159,20 +171,21 @@ export default function AddVehicle() {
             <div className=" h-3"/>
             <TextInput label="Model" onChange={(e)=>setModel(e.target.value)} value={model}/>
             <div className=" h-8"/>
+            <TextInput label="Rent Price" onChange={(e)=>setPrice(e.target.value)} value={price}/>
+            <div className=" h-8"/>
             <div className="flex flex-row">
                 <div className=" flex flex-col items-center justify-center">
                     <h3>Official Receipt</h3>
                     {displayOr}
-
                     <input type="file" onChange={(e)=>setOrImg(e.target.files?.[0])}/>
                 </div>
                 <div className=" flex justify-center flex-col items-center">
                     <h3>Certificate of Registration</h3>
                     {displayCr}
                     <input type="file" onChange={(e)=>setCrImg(e.target.files?.[0])}/>
-                </div>
-              
+                </div>  
             </div>
+            <div className=" h-10"/>
             <Button text="Submit" onClick={()=>handleSubmit()}/>
         </div>        
     </div>

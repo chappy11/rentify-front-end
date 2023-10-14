@@ -5,6 +5,7 @@ import TextInput from "./TextInput"
 import Select from "./Select"
 import Cards from './Cards'
 import ListItem from "./ListItem"
+import Modal from './Modal'
 
 export {
     Navigation,
@@ -13,5 +14,6 @@ export {
     TextInput,
     Select,
     Cards,
-    ListItem
+    ListItem,
+    Modal
 }

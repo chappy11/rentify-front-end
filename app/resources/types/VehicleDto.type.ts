@@ -11,6 +11,7 @@ export type VehicleDto = {
     vehicleCr:string;
     vehicleImage:string;
     user_id:string;
+    price:string;
 }
 
 

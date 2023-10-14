@@ -1,11 +1,18 @@
 'use client';
-
+import { MdOutlineLogout } from 'react-icons/md';
 import Link from "next/link";
 import { Routes } from "../../types/Routes.enum";
 import { useEffect, useMemo, useState } from "react";
 
 export default  function Navigation() {
     const [user,setUser] = useState<any>(null);
+
+    async function handleLogout(){
+        await localStorage.clear();
+
+        window.location.href=Routes.HOME
+    }
+
     const getUser = async()=>{
         const data = await localStorage.getItem('account');
         if(!data){
@@ -38,8 +45,9 @@ export default  function Navigation() {
                 </Link>
                     <Link href={Routes.LOGIN}  className=" text-white px-4 hover:text-slate-300" >
                         {user?.username}
-                    </Link>
-                </>)    
+                </Link>
+                <p className=' text-white px-4 hover:text-slate-300 text-xl' onClick={handleLogout}><MdOutlineLogout/></p>
+            </>)    
         }
 
         return(<>
@@ -51,6 +59,7 @@ export default  function Navigation() {
             <Link href={Routes.LOGIN}  className=" text-white px-4 hover:text-slate-300" >
                 {user?.username}
             </Link>
+            <p className=' text-white px-4 hover:text-slate-300 text-xl' onClick={handleLogout}><MdOutlineLogout/></p>
         </>)
         
     },[user])
