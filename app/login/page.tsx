@@ -12,7 +12,7 @@ import Swal from "sweetalert2";
 export default function Login() {
   const [username,setUsername] = useState<string>('');
   const [password,setPassword] = useState<string>('');
-  const {alertWarning,alertSuccess,alertError} = useAlertOption(); 
+  const {alertWarning,alertError} = useAlertOption(); 
 
   async function handleLogin(){
     try {

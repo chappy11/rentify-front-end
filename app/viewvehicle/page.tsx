@@ -1,19 +1,21 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 'use client'
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import 'leaflet/dist/leaflet.css';
 import L, { LatLngExpression, LeafletMouseEvent, Marker, } from 'leaflet';
-import { MapContainer, TileLayer, Popup, Marker as MapMarker } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker as MapMarker } from 'react-leaflet';
 
 import { useSearchParams } from 'next/navigation';
 import useGetVehicleDetails from '../resources/hooks/vehicle/useGetVehicleDetails';
 import { configVariable } from '../resources/constant/ConfigVariable';
-import { Button, ListItem, Modal } from '../resources/components';
+import { Button, ListItem, Modal, TextInput } from '../resources/components';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { DragEndEvent } from 'leaflet';
 import { calculateDistance } from '../resources/utils/location.utils';
-
+import useAlertOption from '../resources/hooks/useAlertOption';
+import dayjs from 'dayjs';
 type ValuePiece = Date | null;
 
 type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -21,17 +23,18 @@ type Value = ValuePiece | [ValuePiece, ValuePiece];
 export default function ViewVehicle() {
     const params = useSearchParams();
     const vehicle_id = params.get('id');
+    const {alertError,alertWarning,alertSuccess} = useAlertOption();
     const {data:vehicle} = useGetVehicleDetails({id:vehicle_id ? vehicle_id:''})
     const [value, onChange] = useState<Value>(new Date());
     const [isDisplayMap,setIsDisplayMap] = useState<boolean>(false);
     const [coordinate,setCoordinate] = useState<LatLngExpression | null>(null);
     const [origin,setOrigin] =useState<LatLngExpression | null>(null);
     const [destination,setDestination] = useState<LatLngExpression | null>(null);
-    const [destinationType,setDestinationType] = useState<string>('');
     const [kilometer,setKilometer] = useState<string>('');
     const [totalFee,setTotalFee] = useState<string>('');
     const [isOpen,setIsOpen] = useState<boolean>(false);
-    
+    const [time,setTime] = useState<string>('');
+    console.log("VALUE",dayjs(value?.toString()).format('YYYY-MM-DD'))
     const originIcon = new L.DivIcon({
      className:' pin2',
       iconSize:[25,25]
@@ -77,7 +80,7 @@ const [post,setPost] = useState<LatLngExpression>();
         }
 
         return(
-            <ListItem label='Distance' value={kilometer.toString()}/>
+            <ListItem label='Distance' value={kilometer.toString()+' km'}/>
         );
     },[kilometer]);
     
@@ -90,25 +93,9 @@ const [post,setPost] = useState<LatLngExpression>();
     }
   }, [setPost]);
   
-    function handleClickSelectPosition(){
-        if(!post){
-            return;
-        }
-        
-        switch (destinationType) {
-            case 'ORIGIN':
-                    setOrigin(post);
-                    setIsDisplayMap(false)
-                break;
-            case 'DESTINATION':
-                    setDestination(post);
-                    handleCalculateDistance((origin as any)[0] as number, (origin as any)[1], (post as any)[0], (post as any)[1]);
-                    setIsDisplayMap(false);
-                break;
-            default:
-                break;
-        }
-       
+    function handleClickSelectPosition(){  
+         handleCalculateDistance((origin as any)[0] as number, (origin as any)[1], (destination as any)[0], (destination as any)[1]);
+         setIsOpen(false);              
     }
 
     const displayContent = useMemo(()=>{
@@ -119,9 +106,19 @@ const [post,setPost] = useState<LatLngExpression>();
             const newOrigin = origin ? origin : coordinate;
             const newDestination = destination ? destination : coordinate;
             return(
-                <div className=" p-20 -z-10">  
-
-                    <MapContainer center={newOrigin} zoom={13} className=' h-1/4' >
+                <div className=" relative">  
+                    
+                    <div className=' absolute bottom-20 z-50 flex w-full justify-center'>
+                      
+                        <div className=' w-1/4 mx-10'>
+                            <Button text='Confirm your Location' onClick={()=>handleClickSelectPosition()}/>
+                        </div>
+                        <div className=' w-1/4 mx-10'>
+                            <Button text='Back' onClick={()=>setIsOpen(false)} outline/>
+                        </div>
+                    </div>
+                    <h1>Please Choose Your Destination</h1>
+                    <MapContainer center={newOrigin} zoom={13} className=' z-0' >
                     
                     <TileLayer
                         className=' w-full'
@@ -129,7 +126,7 @@ const [post,setPost] = useState<LatLngExpression>();
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
                         <MapMarker 
-                        position={coordinate} 
+                        position={newOrigin} 
                         icon={originIcon}  
                         draggable={true}   
                         eventHandlers={{
@@ -140,28 +137,23 @@ const [post,setPost] = useState<LatLngExpression>();
                             },
                           }}
                         >
-                            <Popup>
-                                <button onClick={handleClickSelectPosition} className=' p-2 bg-red-400'>Select this Location</button>
-                            </Popup>
                         </MapMarker>
                         <MapMarker 
-                        position={coordinate} 
-                        icon={destinationIcon}  
-                        draggable={true}   
-                        eventHandlers={{
-                            dragend: (event: LeafletMouseEvent) => {
-                                const positions = event.target.getLatLng();
-                               
-                                setDestination([positions.lat,positions.lng]);
-                                // handleCalculateDistance((origin as any)[0] as number, (origin as any)[1], positions.lat,positions.lng);
-                            },
-                          }}
+                            position={newDestination} 
+                            icon={destinationIcon}  
+                            draggable={true}   
+                            eventHandlers={{
+                                dragend: (event: LeafletMouseEvent) => {
+                                    const positions = event.target.getLatLng();
+                                
+                                    setDestination([positions.lat,positions.lng]);
+                                    // handleCalculateDistance((origin as any)[0] as number, (origin as any)[1], positions.lat,positions.lng);
+                                },
+                            }}
                         >
                         </MapMarker>
-
-                       
                     </MapContainer>
-                   
+                  
                 </div>
             );
         }
@@ -169,7 +161,7 @@ const [post,setPost] = useState<LatLngExpression>();
         
     },[isDisplayMap, coordinate, origin, destination, originIcon, handleClickSelectPosition, destinationIcon]);
 
-    async function getLocation(destinationType:string){
+    async function getLocation(){
         const option = {
             enableHighAccuracy: true,
             timeout: 5000,
@@ -178,8 +170,8 @@ const [post,setPost] = useState<LatLngExpression>();
         navigator.geolocation.getCurrentPosition((position)=>{
             const {latitude,longitude} = position.coords;
             setCoordinate([latitude,longitude]);
+            setIsOpen(true)
             setIsDisplayMap(true);
-            setDestinationType(destinationType);
         },
         ()=>{
             console.log("ERROR")
@@ -189,16 +181,34 @@ const [post,setPost] = useState<LatLngExpression>();
     }
 
 
-    async function handleBookNow(){
-        if(!totalFee){
+    const displayDestinationIsSet = useMemo(()=>{
+        if(!totalFee || !kilometer){
             return;
         }
 
+        return(
+            <p className=' text-green-500'>Destination is Set</p>
+        )
+    },[totalFee,kilometer])
+
+    async function handleBookNow(){
+        if(!totalFee){
+            
+            return;
+        }
+
+        if(!value){
+            return;
+        }
+
+        if(time){
+            return;
+        }
         
     }
     return (
         <>
-          <Modal isOpen isFullScreen>
+          <Modal isOpen={isOpen} setIsOpen={setIsOpen} isFullScreen>
                    {displayContent}
             </Modal>  
                 <div className=' flex pt-32 justify-center'>
@@ -224,19 +234,18 @@ const [post,setPost] = useState<LatLngExpression>();
                     <div className=' flex flex-1'>
                     <Calendar onChange={onChange}/>
                     </div>
-               
+             
                 <div className=' flex flex-1 flex-col'>
-                    <Button text={'Select Origin'}  onClick={()=>getLocation('ORIGIN')}/>
+                    <TextInput type='time' label='Pick up Time'/>
                     <div className=' h-10'/>
-                    <Button text={'Select Destination'} outline onClick={()=>getLocation('DESTINATION')}/>
+                    {displayDestinationIsSet}
+                    <Button text={'Select Destination'} outline onClick={()=>getLocation()}/>
                     <div className=' h-10'/>
                     <Button text="Book Now" onClick={handleBookNow}/>
                 </div>
                 </div>
             </div>
         </div>  
-
-            {displayContent}
         </>
      )
 }

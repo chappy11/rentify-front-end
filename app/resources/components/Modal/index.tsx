@@ -1,22 +1,21 @@
-'use client'
-
-import { useState } from 'react';
+'use client';
 import { Button } from '..';
 
 type Props = {
     isOpen:boolean;
+    setIsOpen:(isOpen:boolean)=>void;
     onClose?:()=>void;
     children:React.ReactNode;
     isFullScreen?:boolean;
     onConfirm?:()=>void;
+
 }
 
 const Modal = (props:Props) => {
-    const {isOpen,children} = props;
-  const [isModalOpen, setIsModalOpen] = useState(isOpen);
-
+    const {isOpen,children,setIsOpen} = props;
+  
   const closeModal = () => {
-    setIsModalOpen(false);
+    setIsOpen(false);
     if(!props.onClose){
         return;
     }
@@ -30,7 +29,7 @@ const Modal = (props:Props) => {
   }
   return (
     <>
-      {isModalOpen && (
+      {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="fixed inset-0 bg-black opacity-50"></div>
           <div className="bg-white p-8 rounded-lg z-10 w-screen h-screen">
