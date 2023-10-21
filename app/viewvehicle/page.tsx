@@ -201,7 +201,8 @@ const [post,setPost] = useState<LatLngExpression>();
             return;
         }
 
-        if(time){
+        if(!time){
+            
             return;
         }
         
