@@ -36,14 +36,39 @@ export default  function Navigation() {
            
         }
 
+        if(!user.user_type){
+            return(<>
+                <Link href={Routes.VEHICLE}>
+                    <li className=" text-white px-4">
+                       Accounts
+                    </li>
+                </Link>
+                    <Link href={Routes.LOGIN}  className=" text-white px-4 hover:text-slate-300" >
+                        {user?.username}
+                </Link>
+                <p className=' text-white px-4 hover:text-slate-300 text-xl' onClick={handleLogout}><MdOutlineLogout/></p>
+            </>)   
+        }
+
+
         if(user.user_type === 'OWNER'){
             return(<>
+                <Link href="">
+                    <li className=" text-white px-4">
+                       Pending Transaction
+                    </li>
+                </Link>
                 <Link href={Routes.VEHICLE}>
                     <li className=" text-white px-4">
                        My Vehicle
                     </li>
                 </Link>
-                    <Link href={Routes.LOGIN}  className=" text-white px-4 hover:text-slate-300" >
+                <Link href={Routes.DRIVER}>
+                    <li className=" text-white px-4">
+                        Drivers
+                    </li>
+                </Link>
+                <Link href={Routes.LOGIN}  className=" text-white px-4 hover:text-slate-300" >
                         {user?.username}
                 </Link>
                 <p className=' text-white px-4 hover:text-slate-300 text-xl' onClick={handleLogout}><MdOutlineLogout/></p>

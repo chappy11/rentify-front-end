@@ -64,7 +64,8 @@ export default function Login() {
             <Button onClick={()=>handleLogin()} text="Sign In"/>
             <div className=" h-8"/>
             <p className=" text-center">Dont have any account? <Link href={Routes.REGISTER} className=" text-blue-600">Sign Up</Link></p>
+            <p className=" mt-5 text-gray-500 text-center">Login as a <Link href={Routes.DRIVER_LOGIN} className=" text-blue-500 underline">Driver</Link></p>
         </div>
-    </div>
+    </div>  
   )
 }

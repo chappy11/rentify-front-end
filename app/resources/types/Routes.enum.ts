@@ -8,4 +8,8 @@ export enum Routes {
     ADD_VEHICLE = '/addvehicle',
     VEHICLES = '/vehicles',
     VIEW_VEHICLE = '/viewvehicle',
+    DRIVER_LOGIN = '/driverlogin',
+    DRIVER = '/driver',
+    CREATE_DRIVER = '/createdriver',
+    DRIVER_DASHBOARD = '/driverdashboard'
 }

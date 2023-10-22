@@ -16,6 +16,8 @@ import { DragEndEvent } from 'leaflet';
 import { calculateDistance } from '../resources/utils/location.utils';
 import useAlertOption from '../resources/hooks/useAlertOption';
 import dayjs from 'dayjs';
+import { createBooking } from '../resources/services/BookingsService.service';
+import useGetAccountFromStorage from '../resources/hooks/useGetAccountFromStorage';
 type ValuePiece = Date | null;
 
 type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -34,11 +36,12 @@ export default function ViewVehicle() {
     const [totalFee,setTotalFee] = useState<string>('');
     const [isOpen,setIsOpen] = useState<boolean>(false);
     const [time,setTime] = useState<string>('');
-    console.log("VALUE",dayjs(value?.toString()).format('YYYY-MM-DD'))
-    const originIcon = new L.DivIcon({
+        const originIcon = new L.DivIcon({
      className:' pin2',
       iconSize:[25,25]
     });
+
+    const {user} = useGetAccountFromStorage();
     const destinationIcon = new L.DivIcon({
         className:' pin3',
          iconSize:[25,25]
@@ -205,14 +208,46 @@ const [post,setPost] = useState<LatLngExpression>();
             
             return;
         }
+
+        if(!kilometer){
+            return;
+        }
+
+        if(!user){
+            return;
+        }
+
+        if(!origin || !destination){
+            return;
+        }
+        const date = dayjs(value.toString()).format("YYYY-MM-DD")
+        const payload = {
+            customerId:user?.user_id,
+            vehicleId:vehicle?.vehicle_id,
+            distance:kilometer,
+            amount:totalFee,
+            bookdate:date,
+            time:time,
+            owner_id:vehicle?.user_id,
+            origin:origin?.toString(),
+            destination:destination?.toString()
+        }
+        const response = await createBooking(payload)
         
+       if(response.status.toString() === '1'){
+            alertSuccess('Successfully Created')
+            return;
+        }
+
+        alertError();
     }
+
     return (
         <>
           <Modal isOpen={isOpen} setIsOpen={setIsOpen} isFullScreen>
                    {displayContent}
             </Modal>  
-                <div className=' flex pt-32 justify-center'>
+            <div className=' flex pt-32 justify-center'>
             <div className=' p-8 bg-white w-1/2'>
             <h3 className=' font-bold'>Vehicle Details</h3>
             <div className=' flex'>
@@ -237,7 +272,7 @@ const [post,setPost] = useState<LatLngExpression>();
                     </div>
              
                 <div className=' flex flex-1 flex-col'>
-                    <TextInput type='time' label='Pick up Time'/>
+                    <TextInput type='time' label='Pick up Time' onChange={(e:any)=>setTime(e.target.value)}/>
                     <div className=' h-10'/>
                     {displayDestinationIsSet}
                     <Button text={'Select Destination'} outline onClick={()=>getLocation()}/>
